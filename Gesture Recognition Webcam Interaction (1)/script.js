@@ -246,11 +246,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Make all hint icons clickable to toggle back to gesture screen
-    const allHintIcons = document.querySelectorAll('.hint-icon');
-    allHintIcons.forEach((icon, index) => {
+    // Make all hint clickable areas work to toggle back to gesture screen
+    const allHintAreas = document.querySelectorAll('.hint-clickable');
+    allHintAreas.forEach((area, index) => {
         if (index > 0) { // Skip the first one (already handled)
-            icon.addEventListener('click', () => {
+            area.addEventListener('click', () => {
                 showScreen('1b');
                 gestureStartTime = null;
                 lastDetectedGesture = null;
