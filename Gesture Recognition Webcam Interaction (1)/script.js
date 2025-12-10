@@ -6,8 +6,11 @@ const HOLD_DURATION = 2000; // 2 seconds to trigger animation
 let hands = null;
 let camera = null;
 
+console.log('Script loaded');
+
 // Initialize webcam and MediaPipe Hands
 async function initializeCamera() {
+    console.log('Initializing camera...');
     const videoElement = document.getElementById('webcam');
     const canvasElement = document.getElementById('output-canvas');
     const canvasCtx = canvasElement.getContext('2d');
@@ -35,7 +38,14 @@ async function initializeCamera() {
         height: 720
     });
 
-    camera.start();
+    await camera.start();
+    console.log('Camera started');
+
+    // Hide loading screen and show app
+    const loadingScreen = document.getElementById('loading-screen');
+    const app = document.getElementById('app');
+    if (loadingScreen) loadingScreen.style.display = 'none';
+    if (app) app.style.opacity = '1';
 }
 
 // Process hand detection results
@@ -259,9 +269,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Initialize camera
+    console.log('DOM loaded, initializing camera...');
     initializeCamera().catch(err => {
         console.error('Failed to initialize camera:', err);
-        alert('Please allow camera access to use gesture controls.');
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+            loadingScreen.innerHTML = '<p style="color: #ff4444;">Camera Error</p><p style="font-size: 14px; margin-top: 10px;">Please allow camera access and refresh the page</p>';
+        }
     });
 });
 
