@@ -19,7 +19,7 @@ async function initializeCamera() {
     });
 
     hands.setOptions({
-        maxNumHands: 1,
+        maxNumHands: 2,
         modelComplexity: 1,
         minDetectionConfidence: 0.5,
         minTrackingConfidence: 0.5
@@ -46,8 +46,19 @@ function onResults(results) {
         return;
     }
 
+    // Check for butterfly gesture (requires 2 hands)
+    if (results.multiHandLandmarks.length === 2) {
+        const gesture = detectTwoHandGesture(results.multiHandLandmarks[0], results.multiHandLandmarks[1]);
+        if (gesture) {
+            handleGesture(gesture);
+            return;
+        }
+    }
+
+    // Check for single hand gestures
     const landmarks = results.multiHandLandmarks[0];
-    const gesture = detectGesture(landmarks);
+    const handedness = results.multiHandedness ? results.multiHandedness[0].label : 'Right';
+    const gesture = detectGesture(landmarks, handedness);
 
     if (gesture) {
         handleGesture(gesture);
@@ -57,10 +68,34 @@ function onResults(results) {
     }
 }
 
-// Detect specific gestures based on hand landmarks
-function detectGesture(landmarks) {
-    // Get finger tip and base positions
-    const thumbTip = landmarks[4];
+// Detect two-hand gestures (butterfly)
+function detectTwoHandGesture(landmarks1, landmarks2) {
+    // Butterfly: Two hands with fingers spread, thumbs close together
+    // Check if both hands have fingers extended
+    const hand1FingersExtended = checkAllFingersExtended(landmarks1);
+    const hand2FingersExtended = checkAllFingersExtended(landmarks2);
+
+    if (hand1FingersExtended && hand2FingersExtended) {
+        // Check if hands are positioned close together (butterfly shape)
+        const hand1Wrist = landmarks1[0];
+        const hand2Wrist = landmarks2[0];
+        const distance = Math.sqrt(
+            Math.pow(hand1Wrist.x - hand2Wrist.x, 2) +
+            Math.pow(hand1Wrist.y - hand2Wrist.y, 2)
+        );
+
+        // If wrists are reasonably close (forming butterfly shape)
+        if (distance < 0.3) {
+            return 'butterfly';
+        }
+    }
+
+    return null;
+}
+
+// Helper to check if all fingers are extended
+function checkAllFingersExtended(landmarks) {
+    const wrist = landmarks[0];
     const indexTip = landmarks[8];
     const middleTip = landmarks[12];
     const ringTip = landmarks[16];
@@ -70,36 +105,72 @@ function detectGesture(landmarks) {
     const middleBase = landmarks[9];
     const ringBase = landmarks[13];
     const pinkyBase = landmarks[17];
-    const wrist = landmarks[0];
 
-    // Helper function to check if finger is extended
-    const isFingerExtended = (tip, base, wrist) => {
-        return tip.y < base.y && Math.abs(tip.y - wrist.y) > 0.1;
+    // Check if fingers are extended upward
+    const indexExtended = indexTip.y < indexBase.y;
+    const middleExtended = middleTip.y < middleBase.y;
+    const ringExtended = ringTip.y < ringBase.y;
+    const pinkyExtended = pinkyTip.y < pinkyBase.y;
+
+    return indexExtended && middleExtended && ringExtended && pinkyExtended;
+}
+
+// Detect single hand gestures based on shadow puppet shapes
+function detectGesture(landmarks, handedness) {
+    const wrist = landmarks[0];
+    const thumbTip = landmarks[4];
+    const indexTip = landmarks[8];
+    const middleTip = landmarks[12];
+    const ringTip = landmarks[16];
+    const pinkyTip = landmarks[20];
+
+    const thumbBase = landmarks[2];
+    const indexBase = landmarks[5];
+    const middleBase = landmarks[9];
+    const ringBase = landmarks[13];
+    const pinkyBase = landmarks[17];
+
+    // Helper function to check if finger is extended vertically
+    const isFingerExtendedUp = (tip, base) => {
+        return tip.y < base.y - 0.02;
     };
 
-    const thumbExtended = Math.abs(thumbTip.x - wrist.x) > 0.15;
-    const indexExtended = isFingerExtended(indexTip, indexBase, wrist);
-    const middleExtended = isFingerExtended(middleTip, middleBase, wrist);
-    const ringExtended = isFingerExtended(ringTip, ringBase, wrist);
-    const pinkyExtended = isFingerExtended(pinkyTip, pinkyBase, wrist);
+    // Helper function to check if finger is extended horizontally/forward
+    const isFingerExtendedForward = (tip, base, wrist) => {
+        const tipDistFromWrist = Math.abs(tip.x - wrist.x);
+        const baseDistFromWrist = Math.abs(base.x - wrist.x);
+        return tipDistFromWrist > baseDistFromWrist + 0.05;
+    };
 
-    // Rabbit gesture: Peace sign (index and middle fingers up)
-    if (indexExtended && middleExtended && !ringExtended && !pinkyExtended) {
+    const indexUp = isFingerExtendedUp(indexTip, indexBase);
+    const middleUp = isFingerExtendedUp(middleTip, middleBase);
+    const ringUp = isFingerExtendedUp(ringTip, ringBase);
+    const pinkyUp = isFingerExtendedUp(pinkyTip, pinkyBase);
+
+    // Rabbit gesture: Peace sign (index and middle fingers up, others down)
+    if (indexUp && middleUp && !ringUp && !pinkyUp) {
         return 'rabbit';
     }
 
-    // Elephant gesture: Fist with thumb out (thumbs up variation)
-    if (thumbExtended && !indexExtended && !middleExtended && !ringExtended && !pinkyExtended) {
+    // Elephant gesture: Hand horizontal with all fingers extended forward (trunk shape)
+    // All fingers should be extended forward/horizontally
+    const allFingersExtended = indexUp || middleUp || ringUp || pinkyUp;
+    const handHorizontal = Math.abs(indexTip.y - pinkyTip.y) < 0.12; // Fingers at similar height
+    const thumbOut = Math.abs(thumbTip.x - wrist.x) > 0.1; // Thumb extended to side
+
+    if (handHorizontal && allFingersExtended && thumbOut && !(indexUp && middleUp && !ringUp && !pinkyUp)) {
         return 'elephant';
     }
 
-    // Butterfly gesture: All fingers extended (open palm)
-    if (indexExtended && middleExtended && ringExtended && pinkyExtended) {
-        return 'butterfly';
-    }
+    // Dog gesture: Hand sideways with thumb extended (creates dog profile)
+    // Thumb should be prominent (lower jaw), fingers form the head
+    const thumbExtended = Math.abs(thumbTip.x - wrist.x) > 0.15;
+    const fingersGrouped = Math.sqrt(
+        Math.pow(indexTip.x - middleTip.x, 2) +
+        Math.pow(indexTip.y - middleTip.y, 2)
+    ) < 0.08;
 
-    // Dog gesture: Index finger pointing (only index extended)
-    if (indexExtended && !middleExtended && !ringExtended && !pinkyExtended) {
+    if (thumbExtended && fingersGrouped && !indexUp && !middleUp) {
         return 'dog';
     }
 
