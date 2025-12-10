@@ -1,0 +1,143 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #000;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+#app {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.screen {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.screen.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.bg-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.gesture-icons {
+    position: absolute;
+    left: 10.7%;
+    top: 8.3%;
+    width: 89.3%;
+    height: 89.2%;
+    object-fit: contain;
+}
+
+.animal-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.hint-icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 19.5%;
+    height: 21.7%;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.hint-icon:hover {
+    transform: scale(1.05);
+}
+
+.hint-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Animated rabbit screen */
+.animated-rabbit {
+    position: absolute;
+    width: 114.4%;
+    height: 99.5%;
+    left: -6.9%;
+    top: 0.5%;
+    background: url('https://www.figma.com/api/mcp/asset/9b1f3cea-6afc-427d-8f96-d0be49d54724') no-repeat center;
+    background-size: cover;
+    animation: bunnyWave 2s ease-in-out infinite;
+}
+
+@keyframes bunnyWave {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-20px) scale(1.02);
+    }
+}
+
+/* Hide webcam elements */
+#webcam,
+#output-canvas {
+    position: fixed;
+    bottom: -9999px;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1728px) {
+    #app {
+        transform-origin: center center;
+    }
+}
+
+/* Loading state */
+.loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 18px;
+    text-align: center;
+}

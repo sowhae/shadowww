@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow Gestures</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Spotlight Screen 1A -->
+        <div id="screen-1a" class="screen active">
+            <img src="https://www.figma.com/api/mcp/asset/66cdcb6d-2945-4a6f-b38e-a30971b24cbe" alt="Spotlight" class="bg-image">
+            <div id="hint-button" class="hint-icon">
+                <img src="https://www.figma.com/api/mcp/asset/3c115637-ebed-4c45-aadd-e65039403dd3" alt="Hint">
+            </div>
+        </div>
+
+        <!-- Gesture Icons Screen 1B -->
+        <div id="screen-1b" class="screen">
+            <img src="https://www.figma.com/api/mcp/asset/bc40b0a6-104d-4c56-882a-c15efb65e759" alt="Background" class="bg-image">
+            <img src="https://www.figma.com/api/mcp/asset/931f1395-afdf-4c89-943e-e2fa94edd558" alt="Gesture Icons" class="gesture-icons">
+            <div class="hint-icon">
+                <img src="https://www.figma.com/api/mcp/asset/eac36292-5d7d-4d64-a39f-ed96487a11b9" alt="Hint">
+            </div>
+        </div>
+
+        <!-- Rabbit Screen 2A -->
+        <div id="screen-2a" class="screen">
+            <img src="https://www.figma.com/api/mcp/asset/8f5e0ba1-5d5c-4cb0-a618-594fe5901233" alt="Background" class="bg-image">
+            <img src="https://www.figma.com/api/mcp/asset/9b1f3cea-6afc-427d-8f96-d0be49d54724" alt="Rabbit" class="animal-image">
+            <div class="hint-icon">
+                <img src="https://www.figma.com/api/mcp/asset/43f1afa4-6fee-40c6-b61a-849f9ff5ec88" alt="Hint">
+            </div>
+        </div>
+
+        <!-- Elephant Screen 2B -->
+        <div id="screen-2b" class="screen">
+            <img src="https://www.figma.com/api/mcp/asset/4c6fe349-8011-41bf-937c-25230207d6f0" alt="Background" class="bg-image">
+            <img src="https://www.figma.com/api/mcp/asset/7d4d4494-fb7e-494a-bf62-8fe1a2e8ef00" alt="Elephant" class="animal-image">
+            <div class="hint-icon">
+                <img src="https://www.figma.com/api/mcp/asset/a54e3600-149c-4c89-876d-c57ff81c2627" alt="Hint">
+            </div>
+        </div>
+
+        <!-- Butterfly Screen 2C -->
+        <div id="screen-2c" class="screen">
+            <img src="https://www.figma.com/api/mcp/asset/fb5c0008-5633-41d5-bddd-e5f887ff133d" alt="Background" class="bg-image">
+            <img src="https://www.figma.com/api/mcp/asset/0f32d214-c363-4ed2-ae68-00ca732615d7" alt="Butterfly" class="animal-image">
+            <div class="hint-icon">
+                <img src="https://www.figma.com/api/mcp/asset/eb208232-597a-4e3a-8f2a-e3fa9d171406" alt="Hint">
+            </div>
+        </div>
+
+        <!-- Dog/Wolf Screen 2D -->
+        <div id="screen-2d" class="screen">
+            <img src="https://www.figma.com/api/mcp/asset/a89a19cc-192d-4cd3-b45d-fc2e8c1e690f" alt="Background" class="bg-image">
+            <img src="https://www.figma.com/api/mcp/asset/cc40b59a-21ac-4140-b1ae-37f15e61927f" alt="Dog" class="animal-image">
+            <div class="hint-icon">
+                <img src="https://www.figma.com/api/mcp/asset/706e4f39-9e86-4f56-babc-453dec62acfb" alt="Hint">
+            </div>
+        </div>
+
+        <!-- Animated Rabbit Screen 3A -->
+        <div id="screen-3a" class="screen">
+            <div class="animated-rabbit"></div>
+        </div>
+    </div>
+
+    <!-- Hidden video element for webcam -->
+    <video id="webcam" autoplay playsinline></video>
+    <canvas id="output-canvas"></canvas>
+
+    <!-- MediaPipe Hands -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    
+    <script src="script.js"></script>
+</body>
+</html>
