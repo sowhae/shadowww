@@ -130,10 +130,17 @@ function handleGesture(gesture) {
     } else {
         // Check if gesture has been held long enough
         const holdTime = Date.now() - gestureStartTime;
-        
-        if (holdTime >= HOLD_DURATION && gesture === 'rabbit') {
-            // Animate to screen 3a for rabbit
-            showScreen('3a');
+
+        if (holdTime >= HOLD_DURATION) {
+            // Animate to screen 3x for each animal
+            const animatedScreenMap = {
+                'rabbit': '3a',
+                'elephant': '3b',
+                'butterfly': '3c',
+                'dog': '3d'
+            };
+
+            showScreen(animatedScreenMap[gesture]);
             gestureStartTime = null;
             lastDetectedGesture = null;
         }

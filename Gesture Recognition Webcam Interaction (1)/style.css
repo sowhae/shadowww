@@ -112,6 +112,72 @@ body {
     }
 }
 
+/* Animated elephant screen */
+.animated-elephant {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: url('https://www.figma.com/api/mcp/asset/7d4d4494-fb7e-494a-bf62-8fe1a2e8ef00') no-repeat center;
+    background-size: cover;
+    animation: elephantSway 3s ease-in-out infinite;
+}
+
+@keyframes elephantSway {
+    0%, 100% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(-3deg) scale(1.01);
+    }
+}
+
+/* Animated butterfly screen */
+.animated-butterfly {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: url('https://www.figma.com/api/mcp/asset/0f32d214-c363-4ed2-ae68-00ca732615d7') no-repeat center;
+    background-size: cover;
+    animation: butterflyFloat 2.5s ease-in-out infinite;
+}
+
+@keyframes butterflyFloat {
+    0%, 100% {
+        transform: translateY(0) translateX(0) scale(1);
+    }
+    25% {
+        transform: translateY(-15px) translateX(10px) scale(1.01);
+    }
+    75% {
+        transform: translateY(-10px) translateX(-10px) scale(1.01);
+    }
+}
+
+/* Animated dog screen */
+.animated-dog {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: url('https://www.figma.com/api/mcp/asset/cc40b59a-21ac-4140-b1ae-37f15e61927f') no-repeat center;
+    background-size: cover;
+    animation: dogBounce 1.5s ease-in-out infinite;
+}
+
+@keyframes dogBounce {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-15px) scale(1.01);
+    }
+}
+
 /* Hide webcam elements */
 #webcam,
 #output-canvas {
